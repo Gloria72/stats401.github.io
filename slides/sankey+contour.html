@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<!-- Load d3.js -->
+<script src="http://d3js.org/d3.v4.js"></script>
+<!-- <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+<script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.13.0/d3-legend.js"></script> -->
+<!-- Load the sankey.js function -->
+<script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/sankey.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3.layout.cloud.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.9.1/d3-tip.min.js"></script>
+
+<!-- Create a div where the graph will take place -->
+<div id="sankey_div" style="position: absolute; top: 0px; left: 0px;"></div>
+</script>
+<script src="https://d3js.org/d3-contour.v1.min.js">
+</script>
+<div id="ctg" style="position: absolute; top: 1000px; left: 0px;">
+  <div id="ctgt" style="position: absolute; top: 1000px; left: 0px;"></div>
+</div>
+</script>
+<script src="https://d3js.org/d3-contour.v1.min.js">
+</script>
+<!-- <div id="mapDiv" style="position: absolute; top: 30px; left: 600px;"></div>
+<div id="map_dropdown" style="position: absolute; top: 440px; left: 800px;"></div>
+<div id="map_legend" style="position: absolute; top: 30; left: 1200px;"> </div>
+<div id="Wordcloud" style="position: absolute; top: 460px; left: 700px;"></div>
+<div id="WCDropdown" style="position: absolute; top: 900px; left: 835px; width:200px"></div>
+<div id="WCReload" style="position: absolute; top: 920px; left: 825px; width:200px">
+  <button onclick="load(selectedOption)">Randomize Wordcloud Layout</button>
+</div> -->
+<!-- Add style to links or they won't appear properly-->
+<style>
+  .link {
+    fill: none;
+    stroke: #000;
+    stroke-opacity: .3;
+  }
+
+  .link:hover {
+    stroke: #A00;
+    stroke-opacity: .6;
+  }
+</style>
+
+
+<!-- Sankey -->
+<script>
+  //++++++++++++++++++++++++SANKEY+++++++++++++++++++++++++++++++++++
+  // set the dimensions and margins of the graph
+  var margin = { top: 10, right: 10, bottom: 10, left: 10 },
+    width = 600 - margin.left - margin.right,
+    height = 1000 - margin.top - margin.bottom;
+
+  // append the svg object to the body of the page
+  var sankey_svg = d3.select("#sankey_div").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform",
+      "translate(" + margin.left + "," + margin.top + ")");
+
+  // Color scale used
+  var color = d3.scaleOrdinal(d3.schemeCategory20);
+
+  // Set the sankey diagram properties
+  var sankey = d3.sankey()
+    .nodeWidth(36)
+    .nodePadding(20)
+    .size([width, height]);
+
+  // load the data
+  d3.json("data_sankey.json", function (error, graph) {
+
+    // Constructs a new Sankey generator with the default settings.
+    sankey
+      .nodes(graph.nodes)
+      .links(graph.links)
+      .layout(1);
+
+    // add in the links
+    var link = sankey_svg.append("g")
+      .selectAll(".link")
+      .data(graph.links)
+      .enter()
+      .append("path")
+      .attr("class", "link")
+      .attr("d", sankey.link())
+      .style("stroke-width", function (d) { return Math.max(0.5, d.dy); })
+    //.sort(function(a, b) { return b.dy - a.dy; });
+    link.append("title")
+      .text(function (d) { return "There are " + d.value + " people in this link."; });
+
+    // add in the nodes
+    var node = sankey_svg.append("g")
+      .selectAll(".node")
+      .data(graph.nodes)
+      .enter().append("g")
+      .attr("class", "node")
+      .attr("transform", function (d) { return "translate(" + d.x + "," + (d.y) + ")"; })
+      .call(d3.drag()
+        .subject(function (d) { return d; })
+        .on("start", function () { this.parentNode.appendChild(this); })
+        .on("drag", dragmove));
+
+
+    // add the rectangles for the nodes
+    node
+      .append("rect")
+      .attr("height", function (d) { return d.dy; })//d.dy
+      .attr("width", sankey.nodeWidth())
+      .style("fill", function (d) { return d.color = color(d.name.replace(/ .*/, "")); })
+      .style("stroke", function (d) { return d3.rgb(d.color).darker(2); })
+      // Add hover text
+      .append("title")
+      .text(function (d) { return d.name + "\n" + "There is " + d.value + " tweets in this node"; });
+
+    // add in the title for the nodes
+    node
+      .append("text")
+      .attr("x", -6)
+      .attr("y", function (d) { return d.dy / 2; })
+      .attr("dy", ".35em")
+      .attr("text-anchor", "end")
+      .attr("transform", null)
+      .text(function (d) { return d.name; })
+      .filter(function (d) { return d.x < width / 2; })
+      .attr("x", 6 + sankey.nodeWidth())
+      .attr("text-anchor", "start");
+
+    // the function for moving the nodes
+    function dragmove(d) {
+      d3.select(this)
+        .attr("transform",
+          "translate("
+          + (d.x = Math.max(0, Math.min(544, d3.event.x))) + ","
+          + (d.y = Math.max(
+            0, Math.min(775, d3.event.y))
+          ) + ")");
+      sankey.relayout();
+      link.attr("d", sankey.link());
+    }
+
+  });
+  //++++++++++++++++++++++++SANKEY+++++++++++++++++++++++++++++++++++
+
+
+  //++++++++++++++++++++++++CONTOUR+++++++++++++++++++++++++++++++++++
+  const width1 = 928;
+  const height1 = 800;
+  const marginTop1 = 200;
+  const marginRight1 = 30;
+  const marginBottom1 = 30;
+  const marginLeft1 = 40;
+  // data_contour = FileAttachment("data_contour.tsv").tsv({ typed: true })
+  d3.csv('data_contour.csv', function (data_contour) {
+    //console.log(1);
+    //console.log(typeof data_contour);
+
+    data_contour.forEach(element => {
+      element.age = parseInt(element.age);
+      element.frequency = parseInt(element.frequency)
+    });
+    console.log(data_contour);
+
+    // Create the horizontal and vertical scales.
+    const x = d3.scaleLinear()
+      .domain([0, d3.extent(data_contour, d => d.age)[1] + 1]).nice()
+      //.domain(d3.extent(data_contour, d => d.waiting)).nice()
+      .rangeRound([marginLeft1, width1 - marginRight1]);
+
+    const y = d3.scaleLinear()
+      .domain([d3.extent(data_contour, d => d.frequency)[0] - 5, d3.extent(data_contour, d => d.frequency)[1] * 2]).nice()
+      .rangeRound([height1 - marginBottom1, marginTop1]);
+
+    // Compute the density contours.
+    const contours = d3.contourDensity()
+      .x(d => x(d.age))
+      .y(d => y(d.frequency))
+      .size([width1, height1])
+      .bandwidth(50)
+      .thresholds(100)
+      (data_contour);
+
+    var svg = d3.select("#ctg")
+      .append("svg")
+      .attr("width", width1)
+      .attr("height", height1)
+      .style("background-color", "White");
+    // const svg = d3.create("svg")
+    //   .attr("width", width)
+    //   .attr("height", height)
+    //   .attr("viewBox", [0, 0, width, height])
+    //   .attr("style", "max-width: 100%; height: auto;");
+
+    // Append the axes.
+    svg.append("g")
+      .attr("transform", `translate(0,${height1 - marginBottom1})`)
+      .call(d3.axisBottom(x).tickSizeOuter(0))
+      .call(g => g.select(".domain").remove())
+      .call(g => g.select(".tick:last-of-type text").clone()
+        .attr("y", -3)
+        .attr("dy", null)
+        .attr("font-weight", "bold")
+        .text("Age"));
+
+    svg.append("g")
+      .attr("transform", `translate(${marginLeft1},0)`)
+      .call(d3.axisLeft(y).tickSizeOuter(0))
+      .call(g => g.select(".domain").remove())
+      .call(g => g.select(".tick:last-of-type text").clone()
+        .attr("x", 3)
+        .attr("text-anchor", "start")
+        .attr("font-weight", "bold")
+        .text("Frequency"));
+
+    // Append the contours.
+    svg.append("g")
+      .attr("fill", "none")
+      .attr("stroke", "none")
+      .attr("stroke-linejoin", "round")
+      .selectAll()
+      .data(contours)
+      .enter()
+      .append('path')
+      .attr("stroke-width", (d, i) => i % 5 ? 0.25 : 1)
+      .attr("d", d3.geoPath());
+
+    var dd = d3.contourDensity()
+      .y(d => y(d.y))
+      .x(d => x(d.x))(data_contour)
+
+    svg.selectAll("path")
+      .data(dd)
+      .enter()
+      .append("path")
+      .attr("d", d3.geoPath())
+      .attr("fill", "none")
+      .attr("stroke", "green")
+
+    var col = d3.scaleLinear()
+      .domain([0.0003, 0.025])
+      .range(["#ff0000", "#00ff00"]);
+
+    console.log(color(col(0.005)))
+    // Append the contours with hover interaction
+    const contourGroup = svg.append("g")
+      .attr("fill", "none")
+      .attr("stroke", "none")
+      .attr("stroke-linejoin", "round")
+      .selectAll()
+      .data(contours)
+      .enter()
+      .append('path')
+      .attr("stroke-width", (d, i) => i % 5 ? 0.25 : 1)
+      .attr("stroke", (d, i) => d3.interpolateRgb("Blue", "Green")((d.value - 0.0003) / (0.025 - 0.0003)))
+      .attr("d", d3.geoPath())
+      .on("mouseover", handleMouseOver)
+      .on("mouseout", handleMouseOut);
+
+    function showTooltip(x, y, text) {
+      let tooltip = document.getElementById("ctgt");
+      tooltip.innerHTML = text;
+      tooltip.style.display = "block";
+      tooltip.display = "block";
+      //alert(d3.mouse(this)[0]);
+      tooltip.style.left = x + 10 + 'px';
+      tooltip.style.top = y + 10 + 'px';
+    }
+
+    function handleMouseOver(event, d) {
+      // Highlight the contour on hover
+      //console.log(event);
+      //console.log(d);
+      d3.select(this)
+        .attr("stroke", "red");
+      showTooltip(d3.mouse(this)[0], d3.mouse(this)[1], event.value);
+    }
+
+    function hideTooltip() {
+      let tooltip = document.getElementById("ctgt");
+      tooltip.style.display = "none";
+    }
+
+    // Function to handle mouseout
+    function handleMouseOut(event, d) {
+      // Reset the contour color on mouseout
+      d3.select(this)
+        .attr("stroke", d3.interpolateRgb("Blue", "Green")((event.value - 0.0003) / (0.025 - 0.0003)));
+      hideTooltip();
+    }
+
+
+
+
+  })
+
+  //++++++++++++++++++++++++CONTOUR+++++++++++++++++++++++++++++++++++
+</script>

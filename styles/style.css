@@ -1,0 +1,233 @@
+@font-face {
+  font-family: br;
+  src: url(../fonts/Baloo-Regular.ttf);
+}
+@font-face {
+  font-family:ml ;
+  src: url(../fonts/Montserrat-LightItalic.otf);
+}
+h1{
+  font-family:br;
+  font-size: 40px;
+  margin: 10px;
+}
+#mySearch {
+  width: 100%;
+  font-size: 18px;
+  padding: 11px;
+  border: 1px solid #ddd;
+}
+#myMenu {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+#myMenu li a {
+  padding: 12px;
+  text-decoration: none;
+  color: black;
+  display: block
+}
+h2{
+  font-family:ml;
+}
+h4{
+  font-family:ml;
+}
+p{
+  font-family:ml;
+}
+.dropbtn {
+    background-color: #f1f1f1;
+    color: black;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    width: 200px;
+    cursor: pointer;
+    text-align: left;
+    font-family: ml;
+  }
+  
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+  
+  .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+  
+  .dropdown-content a:hover {background-color: #f1f1f1}
+  
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+  
+  .dropdown:hover .dropbtn {
+    background-color: rgb(157, 219, 240);
+    color: white;
+  }
+  body {
+    margin: 0;
+    font-family: "Lato", sans-serif;
+  }
+  
+  .sidebar {
+    margin: 0;
+    padding: 0;
+    width: 200px;
+    background-color:#f1f1f1;
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+    border: grey;
+  }
+  
+  .sidebar a {
+    display: block;
+    color: black;
+    padding: 16px;
+    text-decoration: none;
+  }
+   
+  .sidebar a.active {
+    background-color:rgb(157, 219, 240);
+    color: white;
+  }
+  
+  .sidebar a:hover:not(.active) {
+    background-color: rgb(157, 219, 240);
+    color: white;
+  }
+  #grid-container{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding:16px;
+}
+  
+  div.content {
+    margin-left: 200px;
+    padding: 1px;
+    height: 1000px;
+    
+  }
+ 
+  .row {
+    margin: 16px;
+
+  }
+#myBtnContainer{
+  padding-left: 10px;
+}
+  
+
+  button {
+   
+    font-size: 20px;
+    text-align: center;
+    cursor: pointer;
+    outline: none;
+    color: #3D2f5a;
+    background-color: #edf2fb;
+    border: none;
+    border-radius: 30px;
+    box-shadow: 0 9px #abc4ff;
+}
+
+  .btn:hover {
+  background-color: #edf2fb;
+}
+
+  .btn:active {
+  background-color: #edf2fb;
+  box-shadow:0 2px #abc4ff;
+  transform: translateY(4px);
+ 
+}
+.btn span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+.btn span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+.btn:hover span {
+  padding-right: 15px;
+}
+.btn:hover span:after {
+  opacity: 1;
+  right: 0;
+} 
+  
+  /* Create three equal columns that floats next to each other */
+  .column {
+    float: left;
+    width: 33.33%;
+    display: none; /* Hide all elements by default */
+  }
+  
+  /* Clear floats after rows */ 
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  
+
+  
+  /* The "show" class is added to the filtered elements */
+  .show {
+    display: block;
+  }
+  
+
+
+
+
+
+
+  @media screen and (max-width: 700px) {
+    .sidebar {
+      width: 100%;
+      height: auto;
+      position: relative;
+    }
+    .sidebar a {float: left;}
+    div.content {margin-left: 0;}
+  }
+  
+  @media screen and (max-width: 400px) {
+    .sidebar a {
+      text-align: center;
+      float: none;
+    }
+    div{
+      display:flex;
+      padding: 0;
+    }
+    .row{
+      display:flex;
+
+
+    }
+  }

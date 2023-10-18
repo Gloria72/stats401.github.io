@@ -1,0 +1,98 @@
+{
+    "nodes": [
+        {
+            "node": 0,
+            "name": "Once"
+        },
+        {
+            "node": 1,
+            "name": "2-5 times"
+        },
+        {
+            "node": 2,
+            "name": "6-19 times"
+        },
+        {
+            "node": 3,
+            "name": "20-49 times"
+        },
+        {
+            "node": 4,
+            "name": "50-99 times"
+        },
+        {
+            "node": 5,
+            "name": "100 times or more"
+        },
+        {
+            "node": 6,
+            "name": "Yes"
+        },
+        {
+            "node": 7,
+            "name": "No"
+        }
+    ],
+    "links": [
+        {
+            "source": 0,
+            "target": 6,
+            "value": 3
+        },
+        {
+            "source": 0,
+            "target": 7,
+            "value": 3
+        },
+        {
+            "source": 1,
+            "target": 6,
+            "value": 10
+        },
+        {
+            "source": 1,
+            "target": 7,
+            "value": 11
+        },
+        {
+            "source": 2,
+            "target": 6,
+            "value": 6
+        },
+        {
+            "source": 2,
+            "target": 7,
+            "value": 2
+        },
+        {
+            "source": 3,
+            "target": 6,
+            "value": 4
+        },
+        {
+            "source": 3,
+            "target": 7,
+            "value": 5
+        },
+        {
+            "source": 4,
+            "target": 6,
+            "value": 1
+        },
+        {
+            "source": 4,
+            "target": 7,
+            "value": 2
+        },
+        {
+            "source": 5,
+            "target": 6,
+            "value": 24
+        },
+        {
+            "source": 5,
+            "target": 7,
+            "value": 1
+        }
+    ]
+}
