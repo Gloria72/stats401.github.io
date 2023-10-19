@@ -19,7 +19,7 @@ d3.csv("data2f.csv").then( function(data) {
   // Color palette for continents?
   const color = d3.scaleOrdinal()
     .domain(["English", "Spanish", "English and Spanish", "Other", "Asian Languages","Asian Languages and English"])
-    .range([ "#90EE90", "#FFB200","pink","red","orange","blue"])
+    .range([ "#90EE90", "#FFB200","pink","red","black","blue"])
     // .range(d3.schemeSet1);
 
   // Size scale for countries
@@ -114,7 +114,7 @@ d3.csv("data2f.csv").then( function(data) {
     { color:  "#FFB200", label: "Spanish" },
     { color: "pink", label: "English and Spanish" },
     {color:"red",label:"Other"},
-    {color:"orange",label:"Asian Languages"},
+    {color:"black",label:"Asian Languages"},
     {color:"blue",label:"Asian Languages and English"}
   ];
   const legendItems = legend.selectAll(".legend-item")
